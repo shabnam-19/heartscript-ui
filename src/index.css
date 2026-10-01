@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-burgundy: #751015;
+  --color-oxblood: #4A0B0F;
+  --color-ivory: #F0E0D0;
+  --color-cream: #E8D9C9;
+  --color-near-black: #0B0908;
+  --color-muted-brown: #603820;
+  --color-dusty-rose: #9E5D64;
+  --color-gold: #C5A059;
+
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cinzel", Georgia, serif;
+  --font-script: "Pinyon Script", "Marck Script", cursive;
+  --font-letter: "EB Garamond", Georgia, serif;
+}
+
+:root {
+  --bg: #F0E0D0;
+  --bg-parchment: #E8D9C9;
+  --card: #FAF4EE;
+  --primary: #751015;
+  --secondary: #4A0B0F;
+  --text: #0B0908;
+  --muted: #603820;
+  --rose: #9E5D64;
+  --gold: #C5A059;
+}
+
+body {
+  background-color: #F0E0D0;
+  color: #0B0908;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #F0E0D0;
+}
+
+/* Typography Utility Classes */
+.font-display {
+  font-family: "Cinzel", Georgia, serif;
+}
+
+.font-serif {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-script {
+  font-family: "Pinyon Script", "Marck Script", cursive;
+}
+
+/* Dedicated Letter Prose Utilities */
+.letter-font-garamond {
+  font-family: "EB Garamond", Georgia, serif;
+  font-weight: 500;
+}
+
+.letter-font-lora {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+}
+
+.letter-font-script {
+  font-family: "Marck Script", "Alex Brush", cursive;
+  font-weight: 500;
+}
+
+/* Atmospheric Glows & Shadows */
+.glow {
+  filter: drop-shadow(0 0 10px rgba(117, 16, 21, 0.45));
+}
+
+.glow-gold {
+  filter: drop-shadow(0 0 10px rgba(197, 160, 89, 0.45));
+}
+
+.glow-oxblood {
+  filter: drop-shadow(0 0 12px rgba(74, 11, 15, 0.55));
+}
+
+/* Luxury Vintage Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E8D9C9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #751015;
+  border-radius: 4px;
+  border: 2px solid #E8D9C9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4A0B0F;
+}
+
+/* Text Selection */
+::selection {
+  background: #751015;
+  color: #F0E0D0;
+}
