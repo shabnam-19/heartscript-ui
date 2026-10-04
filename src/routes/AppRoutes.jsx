@@ -9,6 +9,7 @@ import AllLetters from "../pages/AllLetters";
 import LetterDetails from "../pages/LetterDetails";
 import NotFound from "../pages/NotFound";
 import FloatingHearts from "../components/hero/FloatingHearts";
+import SharedLetter from "../pages/SharedLetter";
 
 function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ function AppRoutes() {
         <Route path="/letters" element={<AllLetters />} />
         <Route path="/letters/:id" element={<LetterDetails />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/letter/:token" element={<SharedLetter />} />
       </Routes>
 
       <Footer />

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
 import AnimatedBackground from "../components/common/AnimatedBackground";
-import { FaPrint, FaArrowLeft, FaHeart, FaFeatherAlt } from "react-icons/fa";
+import EmailShareModal from "../components/common/EmailShareModal";
+import { FaArrowLeft, FaHeart, FaFeatherAlt, FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import pen from "../assets/pen.png";
 import { getLetterById } from "../services/LetterService";
 import "../styles/LetterDetails.css";
@@ -20,6 +21,7 @@ function LetterDetails() {
   const [loading, setLoading] = useState(!state?.letter && !!id);
   const [error, setError] = useState(null);
   const [selectedFont, setSelectedFont] = useState("garamond");
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
   useEffect(() => {
     let isCurrent = true;
@@ -50,6 +52,25 @@ function LetterDetails() {
 
   const activeFontClass =
     FONT_OPTIONS.find((f) => f.id === selectedFont)?.className || "letter-font-garamond";
+
+  // Phase 4A: WhatsApp Sharing configuration using existing shareUrl
+  const shareUrl = letter?.shareUrl || "";
+  const isLocalhost =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1" ||
+      shareUrl.includes("localhost") ||
+      shareUrl.includes("127.0.0.1"));
+
+  const receiverText = letter?.receiverName ? ` ${letter.receiverName}` : "";
+  const titleText = letter?.title ? ` "${letter.title}"` : "";
+  const senderSignoff = letter?.senderName ? `\n— Forever yours, ${letter.senderName}` : "";
+
+  const whatsAppMessage = `Dearest${receiverText},\n\nI have penned a private love letter for you on HeartScript${titleText}.\n\nRead your letter here:\n${shareUrl}\n\n⏳ This private keepsake is sealed and available for 24 hours only.${senderSignoff}`;
+
+  const whatsAppShareUrl = shareUrl
+    ? `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsAppMessage)}`
+    : "";
 
   if (loading) {
     return (
@@ -163,23 +184,53 @@ function LetterDetails() {
             />
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-4 mt-12 action-buttons">
-            <Link
-              to="/generate"
-              className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#FAF4EE] hover:bg-[#E8D9C9] text-[#603820] font-display text-xs md:text-sm tracking-widest uppercase font-semibold border border-[#603820]/30 shadow-sm transition"
-            >
-              <FaArrowLeft /> Inscribe Another
-            </Link>
+          <div className="flex flex-col items-center mt-12 action-buttons">
+            <div className="flex flex-wrap justify-center items-center gap-4">
+              {shareUrl && (
+                <button
+                  type="button"
+                  onClick={() => setIsEmailModalOpen(true)}
+                  className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#4A0B0F] via-[#751015] to-[#4A0B0F] text-[#F0E0D0] font-display text-xs md:text-sm tracking-widest uppercase font-semibold border border-[#C5A059]/40 shadow-xl shadow-[#4A0B0F]/25 hover:scale-105 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#C5A059]"
+                  aria-label="Send this love letter via email"
+                >
+                  <FaEnvelope className="text-base text-[#F0E0D0]" /> Send via Email
+                </button>
+              )}
 
-            <button
-              className="flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#4A0B0F] via-[#751015] to-[#4A0B0F] text-[#F0E0D0] font-display text-xs md:text-sm tracking-widest uppercase font-semibold border border-[#C5A059]/40 shadow-xl shadow-[#4A0B0F]/25 hover:scale-105 transition cursor-pointer"
-              onClick={() => window.print()}
-            >
-              <FaPrint /> Print Keepsake
-            </button>
+              {shareUrl && (
+                <a
+                  href={whatsAppShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#128C7E] to-[#25D366] text-white font-display text-xs md:text-sm tracking-widest uppercase font-semibold border border-[#25D366]/40 shadow-xl shadow-[#128C7E]/25 hover:scale-105 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#25D366]"
+                  aria-label="Share this love letter on WhatsApp"
+                >
+                  <FaWhatsapp className="text-lg text-white" /> Share on WhatsApp
+                </a>
+              )}
+
+              <Link
+                to="/generate"
+                className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-[#FAF4EE] hover:bg-[#E8D9C9] text-[#603820] font-display text-xs md:text-sm tracking-widest uppercase font-semibold border border-[#603820]/30 shadow-sm transition"
+              >
+                <FaArrowLeft /> Inscribe Another
+              </Link>
+            </div>
+
+            {shareUrl && isLocalhost && (
+              <p className="text-center font-serif italic text-xs text-[#603820]/75 mt-3 print:hidden max-w-lg">
+                ✦ Testing on localhost: The shared link will open on this machine. In production, your public domain will allow your recipient to open it on any device.
+              </p>
+            )}
           </div>
         </div>
       </div>
+
+      <EmailShareModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        shareUrl={shareUrl}
+      />
     </>
   );
 }
